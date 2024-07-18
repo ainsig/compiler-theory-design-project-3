@@ -1,6 +1,0 @@
-// Tests All Arithmetic Operators
-
-function main returns integer;
-begin
-	5 <> 5 + 1;
-end;

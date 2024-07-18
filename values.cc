@@ -7,6 +7,8 @@
 
 #include <string>
 #include <cmath>
+#include <vector>  
+#include <functional> 
 
 using namespace std;
 
@@ -89,3 +91,37 @@ double evaluateLogical(double left, Operators operator_, double right){
 	}
 	return result; 
 }
+
+double evaluateFold(Operators operator_, vector<double>* values, bool isLeft) {
+    double result;
+    if (values->empty()) {
+        appendError(SYNTAX, "Empty list in fold");
+        return NAN;
+    }
+
+    std::function<double(double, double)> operation;
+    switch (operator_) {
+        case ADD: operation = [](double a, double b) { return a + b; }; break;
+        case SUBTRACT: operation = [](double a, double b) { return a - b; }; break;
+        case MULTIPLY: operation = [](double a, double b) { return a * b; }; break;
+        case DIVIDE: operation = [](double a, double b) { return a / b; }; break;
+        case REMAINDER: operation = [](double a, double b) { return fmod(a, b); }; break;
+        // Add other operators as needed
+        default: appendError(SYNTAX, "Unsupported operation for fold"); return NAN;
+    }
+
+    if (isLeft) {
+        result = values->front();
+        for (size_t i = 1; i < values->size(); ++i) {
+            result = operation(result, (*values)[i]);
+        }
+    } else {
+        result = values->back();
+        for (int i = values->size() - 2; i >= 0; --i) {
+            result = operation((*values)[i], result);
+        }
+    }
+
+    return result;
+}
+

@@ -23,6 +23,8 @@ int yylex();
 void yyerror(const char* message);
 int hex_to_int(const string& hex_str);
 double extract_element(CharPtr list_name, double subscript);
+double evaluateFold(Operators oper, vector<double>* values, bool isLeft);
+
 
 Symbols<double> scalars;
 Symbols<vector<double>*> lists;
@@ -60,7 +62,11 @@ int param_index = 0;
 
 %type <list> list expressions
 
+%type <oper> operator
+
 %type <iden> parameter parameters parameter_list
+
+
 
 %%
 
@@ -125,9 +131,30 @@ statement:
 	expression |
 	WHEN condition ',' expression ':' expression {$$ = $2 ? $4 : $6;} |
 	SWITCH expression IS cases OTHERS ARROW statement ';' ENDSWITCH |
-	IF condition THEN statement_ elsif_statements ELSE statement_ ENDIF
+	FOLD LEFT operator IDENTIFIER ENDFOLD { 
+        	vector<double>* values; 
+        	if (lists.find($4, values)) {
+            		$$ = evaluateFold($3, values, true); 
+        	} else {
+            		appendError(UNDECLARED, $4);
+            		$$ = NAN;
+        	}
+    	
+    	} |
+	FOLD RIGHT operator IDENTIFIER ENDFOLD { 
+        	vector<double>* values; 
+        	if (lists.find($4, values)) {
+            		$$ = evaluateFold($3, values, false); 
+        	} else {
+            		appendError(UNDECLARED, $4);
+            		$$ = NAN;
+        	}
+    	} |
+	IF condition THEN statement_ elsif_statements ELSE statement_ ENDIF 
 		{$$ = !isnan($4) ? $4 : $7;} ;
-
+operator:
+	ADDOP | MULOP | ANDOP | RELOP | NEGOP | REMOP | EXOP ;
+	
 elsif_statements: 
 	elsif_statement elsif_statements { $$ = $1 ? $1 : $2; } |
 	%empty { $$ = 0; } ;  
