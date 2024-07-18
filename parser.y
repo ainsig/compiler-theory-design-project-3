@@ -131,6 +131,8 @@ statement:
 	expression |
 	WHEN condition ',' expression ':' expression {$$ = $2 ? $4 : $6;} |
 	SWITCH expression IS cases OTHERS ARROW statement ';' ENDSWITCH |
+	FOLD LEFT operator '(' expressions ')' ENDFOLD { $$ = evaluateFold($3, $5, true); } |
+	FOLD RIGHT operator '(' expressions ')' ENDFOLD { $$ = evaluateFold($3, $5, false); } |
 	FOLD LEFT operator IDENTIFIER ENDFOLD { 
         	vector<double>* values; 
         	if (lists.find($4, values)) {
