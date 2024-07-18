@@ -1,0 +1,10 @@
+function main returns integer;
+    a: integer is 3;
+begin
+    if a < 10 then
+        3;
+    else
+        1;
+    endif;
+end;
+
