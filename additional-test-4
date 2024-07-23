@@ -1,0 +1,7 @@
+// Test Logical and Relational Operators
+
+function main returns integer;
+begin
+    when (4 * 2 = 8) & (9 / 3 < 4) | (7 - 2 > 10),  10 + 5 * 2 : 20 - 5 / 1;
+end;
+

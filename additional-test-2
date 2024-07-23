@@ -1,0 +1,8 @@
+// Function with Character Literal Escape Characters
+
+function main returns character;
+    lines: integer is 40;
+begin
+    when lines < 60, '\b' : '\t';
+end;
+

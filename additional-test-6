@@ -1,0 +1,14 @@
+// Multiple Variable Initializations
+
+function main returns character;
+    x: integer is 10 - 5 + 2;
+    y: real is 3.5 + 1.5;
+    z: character is 'B';
+begin
+    if x + y > 10 then
+        z;
+    else
+        '\t';
+    endif;
+end;
+

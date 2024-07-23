@@ -1,0 +1,7 @@
+// Single Parameter Declaration
+
+function main b: integer returns integer;
+begin
+    b * 2;
+end;
+
